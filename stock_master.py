@@ -136,3 +136,4 @@ for i in range(0, len(stock_list)):
 stock_list.to_excel('stock_list.xlsx')
                     
 
+

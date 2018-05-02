@@ -81,3 +81,4 @@ stock_list = pd.concat([stock_list, add])
 stock_list.to_excel('stock_list.xlsx')
 
 
+
