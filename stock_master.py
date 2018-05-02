@@ -133,6 +133,6 @@ for i in range(0, len(stock_list)):
                 if stock_list['종목명'][i] != '한세예스24홀딩스' and stock_list['종목명'][i] != 'E1' and stock_list['종목명'][i] != '까페24' and stock_list['종목명'][i] != '예스24' and stock_list['종목명'][i] != '3S' and stock_list['종목명'][i] != '3노드디지탈':
                     stock_list['구분'][i] ='주식(투자회사)' #투자회사 구분
                     
-stock_list.to_excel('stock_list2.xlsx')
+stock_list.to_excel('stock_list.xlsx')
                     
 
