@@ -12,6 +12,7 @@ import pandas as pd
 import requests
 from datetime import datetime, timedelta
 from io import BytesIO
+import numpy as np
  
 def getcodelist():
     # 종목코드 리스트 구하기
@@ -98,11 +99,25 @@ def delisting(market, date=None):
     return df
 
 stock_list = getcodelist()
-Delist1 = delisting('거래소')
-Delist2 = delisting('코스닥')
+delist1 = delisting('거래소')
+delist2 = delisting('코스닥')
 
-stock_list = pd.concat([stock_list,Delist1])
-stock_list = pd.concat([stock_list,Delist2])
+for i in range(0, len(stock_list)):
+    for j in range(0, len(delist1)):
+        if stock_list.index[i] == delist1.index[j]:
+            delist1['상폐여부'][j] = np.nan
+    for j in range(0, len(delist2)):
+        if stock_list.index[i] == delist2.index[j]:
+            delist2['상폐여부'][j] = np.nan
+for i in range(0, len(delist1)):
+    for j in range(0, len(delist2)):
+        if delist1.index[i] == delist2.index[j]:
+            delist2['상폐여부'][j] = np.nan
+            
+delist1 = delist1.dropna()
+delist2 = delist2.dropna()
+stock_list = pd.concat([stock_list,delist1])
+stock_list = pd.concat([stock_list,delist2])
 stock_list = pd.DataFrame(stock_list, columns = ['종목명','시장','구분','상폐여부','폐지일'])
 
 for i in range(0, len(stock_list)):
@@ -118,6 +133,6 @@ for i in range(0, len(stock_list)):
                 if stock_list['종목명'][i] != '한세예스24홀딩스' and stock_list['종목명'][i] != 'E1' and stock_list['종목명'][i] != '까페24' and stock_list['종목명'][i] != '예스24' and stock_list['종목명'][i] != '3S' and stock_list['종목명'][i] != '3노드디지탈':
                     stock_list['구분'][i] ='주식(투자회사)' #투자회사 구분
                     
-stock_list.to_excel('stock_list.xlsx')
+stock_list.to_excel('stock_list2.xlsx')
                     
 
