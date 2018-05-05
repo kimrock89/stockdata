@@ -55,6 +55,7 @@ def getcodelist():
     
     df = pd.DataFrame({'종목코드':code, '종목명':name, '시장':market, '구분':kind}, columns = ['종목코드', '종목명','시장','구분','상폐여부','폐지일'])
     df.set_index('종목코드', inplace=True)
+    df['상폐여부']='상장'
     return df
 
 def delisting(market, date=None):
@@ -135,5 +136,4 @@ for i in range(0, len(stock_list)):
                     
 stock_list.to_excel('stock_list.xlsx')
                     
-
 
