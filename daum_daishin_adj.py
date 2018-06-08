@@ -51,21 +51,6 @@ def process(start, end, code):
     return count
 
 
-def checkRemainTime():
-    g_objCpStatus = win32com.client.Dispatch("CpUtil.CpCybos")
-    remainTime = g_objCpStatus.LimitRequestRemainTime
-    remainCount = g_objCpStatus.GetLimitRemainCount(1)
-    if remainCount <= 0:
-            timeStart = time.time()
-            while remainCount <= 0 :
-#                pythoncom.PumpWaitingMessages()
-                time.sleep(remainTime/1000)
-                remainCount = g_objCpStatus.GetLimitRemainCount(1)  # 시세 제한
-                remainTime = g_objCpStatus.LimitRequestRemainTime   #
-            ellapsed = time.time() - timeStart
-            print("시간 지연: ", ellapsed, "남은 시세 요청 개수:", remainCount, "시간:", remainTime)
-
-
 def daum(code, i):
     url = 'http://finance.daum.net/item/quote_yyyymmdd_sub.daum?page=%s&code=%s&modify=0' %(i,code)
     dfs = pd.read_html(url)
@@ -98,9 +83,8 @@ def daum2(code, i):
     del dfs['전일비']
     del dfs['등락률']
     return dfs
-one_day = datetime.timedelta(days=1)
-thirty_days = datetime.timedelta(days= 5)
-years = datetime.timedelta(days=2650)
+
+
 stock_start = datetime.datetime.now()
 stock_end = datetime.datetime(2010,4,1)
 
@@ -112,7 +96,7 @@ caller_lows = []
 caller_closes = []
 caller_vols = []
 caller_df=[]
-j =1300
+j =0
 while j < len(stock_list.index):
     code = stock_list.index[j]
     if stock_list.loc[code, '상폐여부'] == '상장':
@@ -143,7 +127,6 @@ while j < len(stock_list.index):
         ## 제한 15초당 60건
         ## 1초당 4건.
         cnt = process(stock_start.strftime('%Y%m%d'), stock_end.strftime('%Y%m%d'), '%s'%stock_list.index[j])
-        checkRemainTime()
         chartData = {'Date': caller_dates, 'Open': caller_opens, 'High': caller_highs, 'Low': caller_lows, 'Close': caller_closes, 'Vol': caller_vols }
         df_edit = pd.DataFrame(chartData, columns=['Date', 'Open', 'High', 'Low', 'Close', 'Vol'])
         df_edit["Datetime"] = df_edit.apply(get_datetime, axis=1)
